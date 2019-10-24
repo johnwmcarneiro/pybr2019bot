@@ -1,5 +1,6 @@
 from telebot import TeleBot, types
 from decouple import config
+from eventos import tutoriais_23
 
 
 bot = TeleBot(config('TELEGRAM_TOKEN'))
@@ -49,6 +50,64 @@ def local_enderecos(callback):
         parse_mode="markdown"
     )
     bot.send_location(callback.message.chat.id, latitude, longitude)
+
+
+@bot.message_handler(commands=["grade"])
+def grade_botoes(message):
+    keyboard = types.InlineKeyboardMarkup()
+
+    keyboard.row(
+        types.InlineKeyboardButton(
+            text="Tutorial 23/10",
+            callback_data="grade_tutoriais_23"
+        ),
+        types.InlineKeyboardButton(
+            text="Tutorial 24/10",
+            callback_data="grade_tutoriais_24"
+        )
+    )
+
+    keyboard.row(
+        types.InlineKeyboardButton(
+            text="Palestras 25/10",
+            callback_data="grade_palestras_25"
+        ),
+        types.InlineKeyboardButton(
+            text="Palestras 26/10",
+            callback_data="grade_palestras_26"
+        ),
+        types.InlineKeyboardButton(
+            text="Palestras 27/10",
+            callback_data="grade_palestras_27"
+        )
+    )
+
+    bot.send_message(message.chat.id, "Ver grade de qual dia?", reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "grade_tutoriais_23")
+def grade_tutoriais_23(callback):
+    eventos = tutoriais_23()
+    mensagem = (
+        "Python Brasil 2019\n"
+        "Tutoriais 23/10\n"
+    )
+
+    for evento in eventos:
+        mensagem += (
+            "*{titulo}*\n"
+            "*-{start}*\n\n"
+        ).format(
+            titulo=evento["summary"],
+            start=evento['start']['dateTime'].strftime('%Hh%M')
+        )
+
+    bot.edit_message_text(
+        mensagem,
+        callback.message.chat.id,
+        callback.message.message_id,
+        parse_mode="markdown"
+    )
 
 
 bot.polling()

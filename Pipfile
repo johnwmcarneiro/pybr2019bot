@@ -9,6 +9,7 @@ verify_ssl = true
 pytelegrambotapi = "*"
 requests = "*"
 python-decouple = "*"
+python-dateutil = "*"
 
 [requires]
 python_version = "3.6"
