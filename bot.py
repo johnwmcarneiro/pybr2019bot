@@ -26,11 +26,15 @@ def local_botoes(message):
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "local_palestras")
 def local_palestras(callback):
-    bot.send_message(callback.message.chat.id, (
-        "As palestras da *Python Brasil 2019* acontecerão no endereço:\n"
-        "Centro de Convenções Ribeirão Preto\n"
-        "R. Bernardinho de Campos, 999 - Centro"
-    ), parse_mode="markdown")
+    bot.edit_message_text((
+            "As palestras da *Python Brasil 2019* acontecerão no endereço:\n"
+            "Centro de Convenções Ribeirão Preto\n"
+            "R. Bernardinho de Campos, 999 - Centro"
+        ),
+        callback.message.chat.id,
+        callback.message.message_id,
+        parse_mode="markdown"
+    )
     bot.send_location(callback.message.chat.id, -21.1748969, -47.8098745)
 
 
